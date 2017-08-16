@@ -1,0 +1,25 @@
+---
+- include_role:
+    name: base-packages
+
+- name: Install Apache2
+  apt: name=apache2 state=latest
+
+- name: Install php5
+  apt: name=php5 state=latest
+
+- name: Install apache2-php5 module
+  apt: name=libapache2-mod-php5 state=latest
+
+- name: Create a document root
+  file: path={{doc_root}} state=directory owner=www-data group=www-data
+
+- name: Copy index.php file
+  copy: src=index.php dest={{doc_root}} owner=www-data group=www-data mode=0644
+
+- name: Remove the default index.html
+  file: path={{doc_root}}/index.html state=absent
+
+- name: Copy vhost template
+  template: src=vhost.j2 dest=/etc/apache2/sites-available/000-default.conf
+  notify: restart apache2

@@ -1,0 +1,5 @@
+---
+- hosts: "{{targets}}"
+  roles:
+    - {role: base-packages, tags: base-packages, become: true}
+    - {role: apache2-php, tags: apache2-php, become: true}
